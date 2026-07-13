@@ -23,7 +23,22 @@ class SignInRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'email' => ['required', 'email', 'exists:users,email'],
+            'password' => ['required']
+        ];
+    }
+
+    public function messages(): array
+    {
+        return [
+            'email.exists' => 'No encontramos una cuenta con ese email' 
+        ];
+    }
+
+    public function attributes() : array
+    {
+        return [
+            'password' => 'contraseña'
         ];
     }
 }
