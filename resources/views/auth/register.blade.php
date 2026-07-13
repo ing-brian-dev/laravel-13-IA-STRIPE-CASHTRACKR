@@ -5,7 +5,7 @@
 @endsection
 
 @section('auth-contents')
-    <form method="POST" action="{{ route('registe.store') }}" class="mt-14 space-y-5" novalidate>
+    <form method="POST" action="{{ route('register.store') }}" class="mt-14 space-y-5" novalidate>
         <div class="space-y-2">
             <label class="font-bold text-2xl block" for="name">Nombre</label>
 

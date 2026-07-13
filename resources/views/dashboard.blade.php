@@ -6,6 +6,6 @@
 
 @section('auth-contents')
     @if (session('success'))
-       <x-alert type='error' :message="session('success')" />
+       <x-alert type='success' :message="session('success')" />
     @endif
 @endsection
