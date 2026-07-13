@@ -10,9 +10,11 @@ Route::get('/', function () {
 });
 
 Route::get('/auth/register', [RegisterController::class, 'index'])->name('register');
-Route::post('/auth/register', [RegisterController::class, 'store'])->name('registe.store');
+Route::post('/auth/register', [RegisterController::class, 'store'])->name('register.store');
 
 Route::get('/auth/login', [LoginController::class, 'index'])->name('login');
+Route::post('/auth/login', [LoginController::class, 'store'])->name('login.store');
+
 
 Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
     $request->fulfill();
