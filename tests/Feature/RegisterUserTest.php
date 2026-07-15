@@ -105,3 +105,21 @@ it('verifies the user email from a signed verification link', function () {
     $response -> assertRedirect(route('dashboard'));
     expect($user -> hasVerifiedEmail()) -> toBeTrue();
 });
+
+it('does not allow an unverified user to access the dashboard', function() {
+    $user = User::factory() -> unverified() -> create();
+
+    $response = $this -> actingAs($user) -> get(route('dashboard'));
+
+    $response -> assertRedirect(route('verification.notice'));
+});
+
+it('allows a verified user to access the dashboard', function() {
+    $user = User::factory() -> create([
+        'email_verified_at' => now()
+    ]);
+
+    $response = $this -> actingAs($user) -> get(route('dashboard'));
+
+    $response -> assertOk();    
+});
