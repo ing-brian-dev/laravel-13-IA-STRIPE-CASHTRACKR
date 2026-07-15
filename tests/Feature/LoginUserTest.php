@@ -63,19 +63,31 @@ it('prevents unverified user from accessing dashboard', function () {
 });
 
 it('does not allow access to dashboard if email is not verified', function () {
-    $user = User::factory() -> create([
-        'email_verified_at' => null
+    $user = User::factory()->create([
+        'email_verified_at' => null,
     ]);
 
-    $response = $this -> actingAs($user) -> get(route('dashboard'));
-    $response -> assertRedirect(route('verification.notice'));
+    $response = $this->actingAs($user)->get(route('dashboard'));
+    $response->assertRedirect(route('verification.notice'));
 });
 
 it('allow access to dashboard if email is verified', function () {
-    $user = User::factory() -> create([
-        'email_verified_at' => now()
+    $user = User::factory()->create([
+        'email_verified_at' => now(),
     ]);
 
-    $response = $this -> actingAs($user) -> get(route('dashboard'));
-    $response -> assertOk();
+    $response = $this->actingAs($user)->get(route('dashboard'));
+    $response->assertOk();
+});
+
+it('fails login if user does not exists', function () {
+    $response = $this->from(route('login'))->post(route('login.store'), [
+        'email' => 'doesntexists@gmail.com',
+        'password' => 'doestexistspassword',
+    ]);
+
+    $response->assertRedirect(route('login'));
+    $response->assertSessionHasErrors(['email' => 'No encontramos una cuenta con ese email']);
+
+    $this->assertGuest();
 });
