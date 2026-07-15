@@ -1,9 +1,12 @@
 <?php
 
 use App\Models\User;
+use App\Notifications\VerifyEmail;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\Notification;
+use Illuminate\Support\Facades\URL;
 
 uses(RefreshDatabase::class);
 
@@ -68,4 +71,37 @@ it('prevents duplicate email addresses', function () {
     $response->assertSessionHasErrors([
         'email' => 'El email ya esta registrado',
     ]);
+});
+
+it('sends the verification email notification after registration', function () {
+    Notification::fake();
+
+    $response = $this->post(route('register.store'), [
+        'name' => 'Pedriti',
+        'email' => 'pedtiri@gmail.com',
+        'password' => 'ickkcki3p2.W',
+        'password_confirmation' => 'ickkcki3p2.W',
+    ]);
+
+    $user = User::where('email', 'pedtiri@gmail.com')->first();
+
+    Notification::assertSentTo($user, VerifyEmail::class);
+});
+
+it('verifies the user email from a signed verification link', function () {
+
+    $user = User::factory() -> unverified() -> create();
+
+    $verificationUrl = URL::temporarySignedRoute(
+        'verification.verify',
+        now()->addMinutes(15),
+        [
+            'id' => $user->id,
+            'hash' => sha1($user->email),
+        ]
+    );
+
+    $response = $this -> actingAs($user) -> get($verificationUrl);
+    $response -> assertRedirect(route('dashboard'));
+    expect($user -> hasVerifiedEmail()) -> toBeTrue();
 });
