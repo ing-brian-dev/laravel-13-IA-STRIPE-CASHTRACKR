@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Attributes\Controllers\Middleware;
 use Illuminate\Support\Facades\Auth;
 
-// #[Middleware('auth', except: ['index'])] 
+// #[Middleware('auth', except: ['index'])]
 // #[Middleware('auth', only: ['index'])]
 #[Middleware('auth')]
 #[Middleware('verified')]
@@ -19,7 +19,11 @@ class BudgetController extends Controller
      */
     public function index()
     {
-        return view('dashboard');
+        $budgets = Auth::user()->budgets()->get();
+
+        return view('dashboard', [
+            'budgets' => $budgets,
+        ]);
     }
 
     /**
