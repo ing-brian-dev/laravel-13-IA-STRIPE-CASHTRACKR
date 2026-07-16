@@ -17,6 +17,7 @@
         action="{{ route('verification.send') }}"
         method="POST"
     >
+        @csrf
         <input 
             type="submit"
             class="bg-amber-500 w-full text-center mt-5 px-5 py-2 uppercase font-bold cursor-pointer"

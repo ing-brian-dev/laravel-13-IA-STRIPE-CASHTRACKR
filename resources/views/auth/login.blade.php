@@ -15,6 +15,7 @@
     action="{{ route('login.store') }}"
     novalidate
 >
+    @csrf
     <div class="flex flex-col gap-2">
         <label class="font-bold text-2xl" for="email">Email</label>
 

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\LogoutController;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -16,13 +17,14 @@ Route::post('/auth/register', [RegisterController::class, 'store'])->name('regis
 Route::get('/auth/login', [LoginController::class, 'index'])->name('login');
 Route::post('/auth/login', [LoginController::class, 'store'])->name('login.store');
 
+Route::post('/auth/logout', [LogoutController::class, 'store'])->name('logout.store');
 
 Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
     $request->fulfill();
 
     return redirect()
-           ->route('dashboard')
-           ->with('success','Tu correo fue verificado correctamente. Ya puedes Crear Presupuestos y Gastos.');
+        ->route('dashboard')
+        ->with('success', 'Tu correo fue verificado correctamente. Ya puedes Crear Presupuestos y Gastos.');
 })->middleware(['auth'], 'signed')->name('verification.verify');
 
 Route::get('/email/verify', function () {
@@ -30,10 +32,11 @@ Route::get('/email/verify', function () {
 })->middleware('auth')->name('verification.notice');
 
 Route::post('/email/verification-notification', function (Request $request) {
-    $request -> user() -> sendEmailVerificationNotification();
-    return back() -> with('success', 'Se ah enviado el correo de verificación');
-})->middleware('auth', 'throttle:1,1') -> name('verification.send');
+    $request->user()->sendEmailVerificationNotification();
+
+    return back()->with('success', 'Se ah enviado el correo de verificación');
+})->middleware('auth', 'throttle:1,1')->name('verification.send');
 
 Route::get('dashboard', function () {
     return view('dashboard');
-})->middleware(['auth','verified'])->name('dashboard');
+})->middleware(['auth', 'verified'])->name('dashboard');
