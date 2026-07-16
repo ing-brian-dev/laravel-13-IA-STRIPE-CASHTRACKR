@@ -18,8 +18,9 @@ class User extends Authenticatable implements MustVerifyEmail
     /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable;
 
-    public function sendEmailVerificationNotification() {
-        $this -> notify(new VerifyEmail);
+    public function sendEmailVerificationNotification()
+    {
+        $this->notify(new VerifyEmail);
     }
 
     /**
@@ -33,5 +34,10 @@ class User extends Authenticatable implements MustVerifyEmail
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function budgets()
+    {
+        return $this->hasMany(Budget::class);
     }
 }
