@@ -20,7 +20,7 @@
 @section('dashboard-contents')
    <form 
         method="POST" 
-        action="{{ route('budget.update', $budget->id) }}" 
+        action="{{ route('budgets.update', $budget->id) }}" 
         class="mt-14 space-y-3 max-w-2xl mx-auto" 
         novalidate
     >

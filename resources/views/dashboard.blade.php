@@ -57,7 +57,7 @@
                                 </td>
                                 <td class="py-6 px-10 flex justify-end gap-3">
                                     <x-budget-dropdown 
-                                    
+                                        :budget="$budget"
                                     />
                                 </td>
                             </tr>

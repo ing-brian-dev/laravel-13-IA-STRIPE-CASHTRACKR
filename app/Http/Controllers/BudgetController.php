@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\BudgetRequest;
 use App\Models\Budget;
+use Illuminate\Routing\Attributes\Controllers\Authorize;
 use Illuminate\Routing\Attributes\Controllers\Middleware;
 use Illuminate\Support\Facades\Auth;
 
@@ -54,6 +55,7 @@ class BudgetController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
+    #[Authorize('update','budget')]
     public function edit(Budget $budget)
     {
         return view('budgets.edit', [
@@ -64,6 +66,7 @@ class BudgetController extends Controller
     /**
      * Update the specified resource in storage.
      */
+    #[Authorize('update','budget')]
     public function update(BudgetRequest $request, Budget $budget)
     {
         $budget->update($request->validated());
