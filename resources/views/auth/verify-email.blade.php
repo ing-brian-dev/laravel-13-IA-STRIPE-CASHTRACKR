@@ -10,9 +10,6 @@
     >
         Tu cuenta fue creada con éxito, Ahora debes de confirmarla, revisa tu email.
     </p>
-    @if (session('success'))
-        <x-alert type='success' :message="session('success')" />
-    @endif
     <form 
         action="{{ route('verification.send') }}"
         method="POST"

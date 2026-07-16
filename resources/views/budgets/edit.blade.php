@@ -18,8 +18,14 @@
 @endsection
 
 @section('dashboard-contents')
-   <form method="POST" action="" class="mt-14 space-y-3 max-w-2xl mx-auto" novalidate>
+   <form 
+        method="POST" 
+        action="{{ route('budget.update', $budget->id) }}" 
+        class="mt-14 space-y-3 max-w-2xl mx-auto" 
+        novalidate
+    >
     @csrf
+    @method('PUT')
     <x-budget-form 
         :budget="$budget"
     />
