@@ -27,8 +27,8 @@ class BudgetPolicy
     /**
      * Determine whether the user can delete the model.
      */
-    public function delete(User $user, Budget $budget): bool
+    public function delete(User $user, Budget $budget): Response
     {
-        return false;
+        return $user->id === $budget->user_id ? Response::allow() : Response::deny('No tienes permiso para eliminar este presupuesto');
     }
 }
