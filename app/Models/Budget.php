@@ -22,6 +22,10 @@ class Budget extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function exprenses(){
+        return $this -> hasMany(Expense::class);
+    }
+
     public function isGeneral(): bool {
         return $this -> type === BudgetType::General;
     }
