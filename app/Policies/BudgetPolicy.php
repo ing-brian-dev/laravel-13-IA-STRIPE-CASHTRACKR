@@ -11,9 +11,10 @@ class BudgetPolicy
     /**
      * Determine whether the user can view the model.
      */
-    public function view(User $user, Budget $budget): bool
+    public function view(User $user, Budget $budget): Response
     {
-        return false;
+        return $user->id === $budget->user_id ? Response::allow() : Response::deny('No tienes permiso para ver este presupuesto');
+
     }
 
     /**

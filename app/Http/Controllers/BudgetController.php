@@ -48,6 +48,7 @@ class BudgetController extends Controller
     /**
      * Display the specified resource.
      */
+    #[Authorize('view','budget')]
     public function show(Budget $budget)
     {
         return Inertia::render('Budgets/Show', [
