@@ -12,7 +12,7 @@ class ExpenseController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        dd('Desde store');
     }
 
     /**
