@@ -1,6 +1,7 @@
 import { Head } from '@inertiajs/react';
 import { Budget } from "../../types/budget";
 import AmountDisplay from '../../components/AmountDisplay';
+import ExpenseModal from '../../components/ExpenseModal';
 
 type BudgetProps = {
   budget: Budget;
@@ -40,6 +41,8 @@ export default function Show({ budget }: BudgetProps) {
           />
         </div>
       </main>
+
+      <ExpenseModal />
     </>
   )
 }
