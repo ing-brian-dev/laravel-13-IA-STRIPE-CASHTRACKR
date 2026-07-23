@@ -1,13 +1,14 @@
 import { Dialog, DialogBackdrop, DialogPanel, DialogTitle } from '@headlessui/react';
+import { useExpenseModalStore } from '../stores/expense-modal-store';
 
 export default function ExpenseModal() {
 
-  const open = true
-  
+  const { open, openOrCloseModal } = useExpenseModalStore(state => state);
+
   return (
     <div>
 
-      <Dialog open={open} onClose={() => {}} className="relative z-10">
+      <Dialog open={open} onClose={openOrCloseModal} className="relative z-10">
         <DialogBackdrop
           transition
           className="fixed inset-0 bg-black/70 transition-opacity data-closed:opacity-0 data-enter:duration-300 data-enter:ease-out data-leave:duration-200 data-leave:ease-in"
