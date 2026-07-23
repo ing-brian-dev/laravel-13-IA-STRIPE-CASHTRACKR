@@ -3,14 +3,22 @@ import { Budget } from "../../types/budget";
 import AmountDisplay from '../../components/AmountDisplay';
 import ExpenseModal from '../../components/ExpenseModal';
 import { useExpenseModalStore } from '../../stores/expense-modal-store';
+import { useEffect } from 'react';
+import { Category } from '../../types/category';
 
 type BudgetProps = {
   budget: Budget;
+  categories: Category[]
 }
 
-export default function Show({ budget }: BudgetProps) {
+export default function Show({ budget, categories }: BudgetProps) {
 
-  const { openOrCloseModal } = useExpenseModalStore(state => state)
+  const { openOrCloseModal } = useExpenseModalStore(state => state);
+
+  useEffect(() => {
+    useExpenseModalStore.getState().setBudget(budget);
+    useExpenseModalStore.getState().setCategories(categories);
+  }, []);
 
   return (
     <>
