@@ -28,7 +28,7 @@ export default function Show({ budget, categories, spent }: BudgetProps) {
   useEffect(() => {
     useExpenseModalStore.getState().setBudget(budget);
     useExpenseModalStore.getState().setCategories(categories);
-  }, []);
+  }, [budget, categories]);
 
   const percentageUsed = +((+spent / +budget.amount) * 100).toFixed(2);
   const remaining = +budget.amount - +spent;
@@ -127,7 +127,7 @@ export default function Show({ budget, categories, spent }: BudgetProps) {
                           <p className='text-sm text-gray-400'>{formatDate(expense.created_at)}</p>
                         </td>
                         <td className="py-6 px-10 flex justify-end gap-3">
-                          <ExpenseDropdown 
+                          <ExpenseDropdown
                             expense={expense}
                           />
                         </td>
