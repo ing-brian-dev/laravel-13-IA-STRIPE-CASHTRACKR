@@ -9,6 +9,7 @@ import { toast, ToastContainer } from 'react-toastify';
 import { formatCurrency, formatDate } from '../../utils';
 import ProgresBar from '../../components/ProgresBar';
 import ExpenseDropdown from '../../components/ExpenseDropdown';
+import DeleteExpenseModal from '../../components/DeleteExpenseModal';
 
 type BudgetProps = {
   budget: Budget;
@@ -149,6 +150,7 @@ export default function Show({ budget, categories, spent }: BudgetProps) {
       </section>
 
       <ExpenseModal />
+      <DeleteExpenseModal />
       <ToastContainer />
     </>
   )

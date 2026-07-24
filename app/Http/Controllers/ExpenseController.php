@@ -31,8 +31,10 @@ class ExpenseController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Expense $expense)
+    public function destroy(Budget $budget, Expense $expense)
     {
-        //
+        $expense->delete();
+
+        return redirect()->route('budgets.show', $budget)->with('success', 'Gasto Eliminado correctamente');
     }
 }
