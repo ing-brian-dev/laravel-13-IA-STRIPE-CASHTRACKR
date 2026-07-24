@@ -41,9 +41,9 @@ class BudgetController extends Controller
      */
     public function store(BudgetRequest $request)
     {
-        Auth::user()->budgets()->create($request->validated());
+        $budget = Auth::user()->budgets()->create($request->validated());
 
-        return redirect()->route('dashboard') -> with('success','Presupuesto creado correctamente');
+        return redirect()->route('budgets.show', $budget) -> with('success','Presupuesto creado correctamente');
     }
 
     /**
@@ -97,6 +97,6 @@ class BudgetController extends Controller
     public function destroy(Budget $budget)
     {
         $budget -> delete();
-        return redirect() -> route('dashboard') -> with('success', 'Presupuesto eliminado correctamente');
+        return redirect() -> route('budgets.show', $budget) -> with('success', 'Presupuesto eliminado correctamente');
     }
 }
