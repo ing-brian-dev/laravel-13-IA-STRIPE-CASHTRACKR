@@ -23,6 +23,7 @@
         "@vitejs/plugin-react": "^6.0.4",
         "react": "^19.2.8",
         "react-dom": "^19.2.8",
+        "react-toastify": "^11.1.0",
         "ziggy-js": "^2.6.3",
         "zustand": "^5.0.14"
     }
