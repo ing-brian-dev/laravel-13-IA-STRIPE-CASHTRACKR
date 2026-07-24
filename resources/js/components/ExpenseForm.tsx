@@ -13,7 +13,7 @@ export default function ExpenseForm() {
 
     const isEditing = !!expense;
 
-    const { data, setData, post, errors, reset, processing } = useForm({
+    const { data, setData, post, put, errors, reset, processing } = useForm({
         name: expense?.name ?? '',
         amount: expense?.amount ?? '',
         category: expense?.category ?? ''
@@ -23,19 +23,32 @@ export default function ExpenseForm() {
 
     const submit = (e: React.SubmitEvent<HTMLFormElement>) => {
         e.preventDefault();
+
+        if (isEditing && expense) {
+            put(route('expenses.update', [budget.id, expense.id]), {
+                onSuccess: () => {
+                    reset();
+                    openOrCloseModal();
+                },
+                preserveScroll: true
+            })
+            return;
+        }
+
         post(route('expenses.store', budget.id), {
             onSuccess: () => {
                 reset();
                 openOrCloseModal();
-            }
+            },
+            preserveScroll: true
         });
     }
 
     return (
         <>
-              <DialogTitle as="h3" className="text-4xl font-black mt-10 text-center">
+            <DialogTitle as="h3" className="text-4xl font-black mt-10 text-center">
                 {isEditing ? 'Editar' : 'Nuevo'}{''} Gasto
-              </DialogTitle>        
+            </DialogTitle>
             <div className='p-10 flex justify-center'>
                 <form
                     onSubmit={submit}
@@ -96,10 +109,10 @@ export default function ExpenseForm() {
                             ${processing ? ' opacity-60 cursor-not-allowed ' : ' hover:bg-purple-800 cursor-pointer '}
                             bg-purple-950 mt-5 w-full p-3 rounded-lg text-white font-bold text-xl`}
                     >
-                        {processing 
-                            ? 'Guardando...' 
-                            : isEditing 
-                                ? 'Actualizar Gasto' 
+                        {processing
+                            ? 'Guardando...'
+                            : isEditing
+                                ? 'Actualizar Gasto'
                                 : 'Agregar Gasto'}
                     </button>
                 </form>
