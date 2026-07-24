@@ -1,10 +1,12 @@
-import { Head } from '@inertiajs/react';
+import { Head, usePage } from '@inertiajs/react';
 import { Budget } from "../../types/budget";
 import AmountDisplay from '../../components/AmountDisplay';
 import ExpenseModal from '../../components/ExpenseModal';
 import { useExpenseModalStore } from '../../stores/expense-modal-store';
 import { useEffect } from 'react';
 import { Category } from '../../types/category';
+import { toast, ToastContainer } from 'react-toastify';
+import { formatCurrency, formatDate } from '../../utils';
 
 type BudgetProps = {
   budget: Budget;
@@ -13,12 +15,17 @@ type BudgetProps = {
 
 export default function Show({ budget, categories }: BudgetProps) {
 
+  const { flash } = usePage().props;
   const { openOrCloseModal } = useExpenseModalStore(state => state);
 
   useEffect(() => {
     useExpenseModalStore.getState().setBudget(budget);
     useExpenseModalStore.getState().setCategories(categories);
   }, []);
+
+  useEffect(() => {
+    if (flash.success) toast.success(flash.success);
+  }, [flash]);
 
   return (
     <>
@@ -71,9 +78,59 @@ export default function Show({ budget, categories }: BudgetProps) {
             Nuevo Gasto
           </button>
         </div>
+        {budget.expenses.length ? (
+          <div className="mt-8 flow-root ">
+            <div className=" ring-1 ring-gray-300 rounded-lg ">
+              <div className="inline-block min-w-full align-middle">
+                <table className="relative min-w-full">
+                  <thead>
+                    <tr>
+                      <th scope="col">
+                        <span className="sr-only">Gastos</span>
+                      </th>
+                      <th scope="col">
+                        <span className="sr-only">Acciones</span>
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-gray-300 ">
+                    {budget.expenses.map(expense => (
+
+                      <tr
+                        key={expense.id} 
+                        className='flex justify-between items-center'
+                      >
+                        <td className={`pb-5 px-10 relative`}>
+                          <p className={`absolute top-0 left-0 inline-block px-3 py-1 rounded-br-2xl text-sm font-medium w-40`}>
+                            {/* Categoría. */}
+                          </p>
+                          <p className="text-xl font-bold text-gray-500">{expense.name}</p>
+                          <p className="text-lg text-gray-500">{formatCurrency(+expense.amount)}</p>
+                          <p className='text-sm text-gray-400'>{formatDate(expense.created_at)}</p>
+                        </td>
+                        <td className="py-6 px-10 flex justify-end gap-3">
+
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        ) : (
+          <p className="text-center text-xl mt-10 ">No Hay Gastos.
+            <button
+              type='button'
+              onClick={openOrCloseModal}
+              className="text-amber-500"
+            >Comienza creando uno</button>
+          </p>
+        )}
       </section>
 
       <ExpenseModal />
+      <ToastContainer />
     </>
   )
 }

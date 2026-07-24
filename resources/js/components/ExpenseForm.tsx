@@ -7,8 +7,9 @@ export default function ExpenseForm() {
 
     const budget = useExpenseModalStore(state => state.budget);
     const categories = useExpenseModalStore(state => state.categories);
+    const openOrCloseModal = useExpenseModalStore(state => state.openOrCloseModal);
 
-    const { data, setData, post, errors } = useForm({
+    const { data, setData, post, errors, reset, processing } = useForm({
         name: '',
         amount: '',
         category: ''
@@ -18,7 +19,12 @@ export default function ExpenseForm() {
 
     const submit = (e: React.SubmitEvent<HTMLFormElement>) => {
         e.preventDefault();
-        post(route('expenses.store', budget.id));
+        post(route('expenses.store', budget.id), {
+            onSuccess: () => {
+                reset();
+                openOrCloseModal();
+            }
+        });
     }
 
     return (
@@ -75,8 +81,14 @@ export default function ExpenseForm() {
                         {errors.category && <InputError>{errors.category}</InputError>}
                     </div>
                 )}
-                <button type="submit" className="mt-5 bg-purple-950 hover:bg-purple-800 w-full p-3 rounded-lg text-white font-bold  text-xl cursor-pointer">
-                    Agregar Gasto
+                <button
+                    type="submit"
+                    disabled={processing}
+                    className={`
+                            ${processing ? ' opacity-60 cursor-not-allowed ' : ' hover:bg-purple-800 cursor-pointer '}
+                            bg-purple-950 mt-5 w-full p-3 rounded-lg text-white font-bold text-xl`}
+                >
+                    {processing ? 'Guardando...' : 'Agregar Gasto'}
                 </button>
             </form>
         </div>
