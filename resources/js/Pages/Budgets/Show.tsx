@@ -3,29 +3,43 @@ import { Budget } from "../../types/budget";
 import AmountDisplay from '../../components/AmountDisplay';
 import ExpenseModal from '../../components/ExpenseModal';
 import { useExpenseModalStore } from '../../stores/expense-modal-store';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Category } from '../../types/category';
 import { toast, ToastContainer } from 'react-toastify';
 import { formatCurrency, formatDate } from '../../utils';
+import ProgresBar from '../../components/ProgresBar';
+import ExpenseDropdown from '../../components/ExpenseDropdown';
 
 type BudgetProps = {
   budget: Budget;
-  categories: Category[]
+  categories: Category[];
+  spent: string;
 }
 
-export default function Show({ budget, categories }: BudgetProps) {
+export default function Show({ budget, categories, spent }: BudgetProps) {
 
   const { flash } = usePage().props;
-  const { openOrCloseModal } = useExpenseModalStore(state => state);
+  useEffect(() => {
+    if (flash.success) toast.success(flash.success);
+  }, [flash]);
 
+  const { openOrCloseModal } = useExpenseModalStore(state => state);
   useEffect(() => {
     useExpenseModalStore.getState().setBudget(budget);
     useExpenseModalStore.getState().setCategories(categories);
   }, []);
 
+  const percentageUsed = +((+spent / +budget.amount) * 100).toFixed(2);
+  const remaining = +budget.amount - +spent;
+  const [progress, setProgress] = useState(0);
+
   useEffect(() => {
-    if (flash.success) toast.success(flash.success);
-  }, [flash]);
+    const timeout = setTimeout(() => {
+      setProgress(percentageUsed);
+    }, 100);
+
+    return () => clearTimeout(timeout);
+  }, [percentageUsed]);
 
   return (
     <>
@@ -43,7 +57,9 @@ export default function Show({ budget, categories }: BudgetProps) {
       </section>
 
       <main className='grid grid-cols-1 md:grid-cols-2 items-center gap-20 mt-10'>
-
+        <ProgresBar
+          percentageUsed={progress}
+        />
         <div className='space-y-5'>
           <AmountDisplay
             label='Presupuesto'
@@ -51,11 +67,11 @@ export default function Show({ budget, categories }: BudgetProps) {
           />
           <AmountDisplay
             label='Gastado'
-            amount={0}
+            amount={+spent}
           />
           <AmountDisplay
             label='Restante'
-            amount={0}
+            amount={remaining}
           />
         </div>
       </main>
@@ -110,7 +126,9 @@ export default function Show({ budget, categories }: BudgetProps) {
                           <p className='text-sm text-gray-400'>{formatDate(expense.created_at)}</p>
                         </td>
                         <td className="py-6 px-10 flex justify-end gap-3">
-
+                          <ExpenseDropdown 
+                            expense={expense}
+                          />
                         </td>
                       </tr>
                     ))}
