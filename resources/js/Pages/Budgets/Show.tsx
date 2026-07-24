@@ -95,15 +95,16 @@ export default function Show({ budget, categories }: BudgetProps) {
                   </thead>
                   <tbody className="divide-y divide-gray-300 ">
                     {budget.expenses.map(expense => (
-
                       <tr
-                        key={expense.id} 
+                        key={expense.id}
                         className='flex justify-between items-center'
                       >
-                        <td className={`pb-5 px-10 relative`}>
-                          <p className={`absolute top-0 left-0 inline-block px-3 py-1 rounded-br-2xl text-sm font-medium w-40`}>
-                            {/* Categoría. */}
-                          </p>
+                        <td className={`${budget.type === 'general' ? 'pt-10' : 'pt-5'} pb-5 px-10 relative`}>
+                          {budget.type === 'general' && (
+                            <p className={`absolute top-0 left-0 inline-block px-3 py-1 rounded-br-2xl text-sm font-medium w-40 ${expense.category_color}`}>
+                              {expense.category_label}
+                            </p>
+                          )}
                           <p className="text-xl font-bold text-gray-500">{expense.name}</p>
                           <p className="text-lg text-gray-500">{formatCurrency(+expense.amount)}</p>
                           <p className='text-sm text-gray-400'>{formatDate(expense.created_at)}</p>

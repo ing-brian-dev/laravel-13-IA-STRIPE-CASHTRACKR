@@ -12,9 +12,11 @@ type CategoryValue =
     | 'other';
 
 export type Expense = {
-    id: number
-    name: string
-    amount: string
-    created_at: string
-    category: CategoryValue
+    id: number;
+    name: string;
+    amount: string;
+    created_at: string;
+    category: CategoryValue;
+    category_label : string;
+    category_color : string;
 }
