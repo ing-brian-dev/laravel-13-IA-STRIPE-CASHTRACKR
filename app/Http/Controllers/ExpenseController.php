@@ -14,7 +14,9 @@ class ExpenseController extends Controller
      */
     public function store(ExpenseRequest $request, Budget $budget)
     {
-        dd('Desde store');
+        $budget->expenses()->create($request->validated());
+
+        return redirect()->route('budgets.show', $budget)->with('success', 'Gasto registrado correctamente');
     }
 
     /**
