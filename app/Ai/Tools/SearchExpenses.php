@@ -33,11 +33,11 @@ class SearchExpenses implements Tool
         $query = Expense::where('budget_id', $this->budgetId);
 
         if ($request['name'] ?? null) {
-            $query->where('name', 'ilike', '%'.$request['name'].'%');
+            $query->where('name', 'like', '%'.$request['name'].'%');//TODO: traspase ilike to PostgreSQL
         }
 
         if ($request['category'] ?? null) {
-            $query->where('category', 'ilike', '%'.$request['category'].'%');
+            $query->where('category', 'like', '%'.$request['category'].'%');//TODO: traspase ilike to PostgreSQL
         }
 
         $expenses = $query->get(['name', 'amount', 'category', 'created_at']);

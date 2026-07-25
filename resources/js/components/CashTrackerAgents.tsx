@@ -3,23 +3,52 @@ import { DefaultChatTransport } from 'ai';
 import { useState } from 'react';
 
 type CashTrackrAgentProps = {
-    budgetId: number
+    budgetId: number;
+    name: string
 }
 
 
-export default function CashTrackrAgent({budgetId}: CashTrackrAgentProps) {
+export default function CashTrackrAgent({budgetId, name}: CashTrackrAgentProps) {
 
     const [input, setInput] = useState('');
     const { sendMessage, messages } = useChat({
         transport: new DefaultChatTransport({
             api: `/dashboard/budgets/${budgetId}/chat`
         })
-    });
-
+    });    
+    
     return (
         <section className='p-10 lg:px-5 shadow-lg mt-10'>
             <h2 className="text-3xl font-bold">Pregunta sobre tu Presupuesto, añade gastos y más.</h2>
-            <div className="space-y-3 mb-4 mt-8"></div>
+            <div className="space-y-3 mb-4 mt-8">
+                {messages.map(message => (
+                    <div 
+                        className={`p-3 rounded-lg max-w-[80%] lg:max-w-[60] ${
+                            message.role === 'user'
+                            ? 'bg-amber-500 text-white ml-auto'
+                            : 'bg-gray-100 mr-auto'
+                        }`}
+                        key={message.id}
+                    >
+                        {message.parts.map((part, index) => {
+                            if(part.type !== 'text') return null;
+                            const text = part.text.trim();
+
+                            if(!text) return null;
+
+                            return (
+                                <p
+                                    key={index}
+                                    className='text-xl'
+                                >
+                                    <strong>{message.role === 'user' ? name : 'CashTrackr IA'}:</strong>{' '}
+                                    {text}
+                                </p>
+                            )
+                        })}
+                    </div>
+                ))}
+            </div>
             
             <form
                 onSubmit={(e) => {
