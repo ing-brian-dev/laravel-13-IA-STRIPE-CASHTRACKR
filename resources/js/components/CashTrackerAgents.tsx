@@ -1,12 +1,13 @@
 import { useChat } from '@ai-sdk/react';
+import { router } from '@inertiajs/react';
 import { DefaultChatTransport } from 'ai';
 import { useState } from 'react';
+import { toast } from 'react-toastify';
 
 type CashTrackrAgentProps = {
     budgetId: number;
     name: string
 }
-
 
 export default function CashTrackrAgent({budgetId, name}: CashTrackrAgentProps) {
 
@@ -14,7 +15,24 @@ export default function CashTrackrAgent({budgetId, name}: CashTrackrAgentProps) 
     const { sendMessage, messages } = useChat({
         transport: new DefaultChatTransport({
             api: `/dashboard/budgets/${budgetId}/chat`
-        })
+        }),
+        onFinish: ({message}) => {
+            const expenseCreated = message.parts.some(part => {
+                // if(!part.output) return null;
+                // return part.output.startsWith('[EXPENSE_CREATED]')
+
+                const isAddExpenseTool = part.type === 'tool-AddExpense'
+
+                const finished = 'state' in part && part.state === 'output-available';
+
+                return isAddExpenseTool && finished
+            });
+
+            if(expenseCreated) {
+                toast.success('Gasto registrado correctamente');
+                router.reload({only: ['expenses', 'budget']})
+            }
+        }
     });    
     
     return (
