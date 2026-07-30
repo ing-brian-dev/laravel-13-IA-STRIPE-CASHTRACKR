@@ -6,6 +6,7 @@ use App\Http\Controllers\BudgetChatController;
 use App\Http\Controllers\BudgetController;
 use App\Http\Controllers\ExpenseController;
 use App\Http\Controllers\LogoutController;
+use App\Http\Controllers\TicketScanController;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -54,4 +55,5 @@ Route::prefix('dashboard')->group(function () {
     Route::delete('/budgets/{budget}/expenses/{expense}', [ExpenseController::class, 'destroy'])->name('expenses.destroy');
 
     Route::post('/budgets/{budget}/chat', [BudgetChatController::class, 'store' ])->name('budgets.chat');
+    Route::post('/budgets/{budget}/scan-ticket', [TicketScanController::class, 'store' ])->name('budgets.scan-ticket');
 });
