@@ -10,6 +10,7 @@ use App\Http\Controllers\TicketScanController;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Inertia\Inertia;
 
 Route::get('/', function () {
     return view('welcome');
@@ -54,6 +55,29 @@ Route::prefix('dashboard')->group(function () {
     Route::put('/budgets/{budget}/expenses/{expense}', [ExpenseController::class, 'update'])->name('expenses.update');
     Route::delete('/budgets/{budget}/expenses/{expense}', [ExpenseController::class, 'destroy'])->name('expenses.destroy');
 
-    Route::post('/budgets/{budget}/chat', [BudgetChatController::class, 'store' ])->name('budgets.chat');
-    Route::post('/budgets/{budget}/scan-ticket', [TicketScanController::class, 'store' ])->name('budgets.scan-ticket');
+    Route::post('/budgets/{budget}/chat', [BudgetChatController::class, 'store'])->name('budgets.chat');
+    Route::post('/budgets/{budget}/scan-ticket', [TicketScanController::class, 'store'])->name('budgets.scan-ticket');
+});
+
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::post('/subscription-checkout/{plan}', function (Request $request, string $plan) {
+        $prices = [
+            'monthly' => config('services.stripe.price_ai_monthly'),
+            'yearly' => config('services.stripe.price_ai_yearly'),
+        ];
+
+        abort_unless(isset($prices[$plan]), 404, 'Plan no válido');
+
+        $checkout = $request->user()->newSubscription('default', $prices[$plan])
+            ->allowPromotionCodes()
+            ->checkout([
+                'success_url' => route('billing.success'),
+                'cancel_url' => route('billing.cancel'),
+            ]);
+
+        return Inertia::location($checkout->url);
+    })->name('subscription.checkout')->whereIn('plan', ['monthly', 'yearly']);
+
+    Route::view('/billing/success', 'billing.success')->name('billing.success');
+    Route::view('/billing/cancel', 'billing.cancel')->name('billing.cancel');
 });
