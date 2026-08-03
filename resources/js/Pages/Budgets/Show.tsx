@@ -21,6 +21,10 @@ type BudgetProps = {
 export default function Show({ budget, categories, spent }: BudgetProps) {
 
   const { flash, user } = usePage().props;
+
+  console.log(user);
+  
+
   useEffect(() => {
     if (flash.success) toast.success(flash.success);
   }, [flash]);
@@ -151,7 +155,7 @@ export default function Show({ budget, categories, spent }: BudgetProps) {
       </section>
       <CashTrackrAgent 
         budgetId={budget.id}
-        name={user.name}
+        name={user.user.name}
       />
       <ExpenseModal />
       <DeleteExpenseModal />
