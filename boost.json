@@ -9,6 +9,7 @@
     "sail": false,
     "skills": [
         "ai-sdk-development",
+        "cashier-stripe-development",
         "laravel-best-practices",
         "pest-testing",
         "inertia-react-development",
