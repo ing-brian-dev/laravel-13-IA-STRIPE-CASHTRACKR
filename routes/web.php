@@ -61,6 +61,7 @@ Route::prefix('dashboard')->group(function () {
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/subscription-checkout/{plan}', function (Request $request, string $plan) {
+        
         $prices = [
             'monthly' => config('services.stripe.price_ai_monthly'),
             'yearly' => config('services.stripe.price_ai_yearly'),
@@ -80,4 +81,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::view('/billing/success', 'billing.success')->name('billing.success');
     Route::view('/billing/cancel', 'billing.cancel')->name('billing.cancel');
+
+    Route::get('/plans', function () {
+        return Inertia::render('Pro/Plans');
+    })-> name('plans');
 });

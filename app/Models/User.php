@@ -17,7 +17,7 @@ use Laravel\Cashier\Billable;
 class User extends Authenticatable implements MustVerifyEmail
 {
     /** @use HasFactory<UserFactory> */
-    use HasFactory, Notifiable, Billable;
+    use Billable, HasFactory, Notifiable;
 
     public function sendEmailVerificationNotification()
     {
@@ -40,5 +40,26 @@ class User extends Authenticatable implements MustVerifyEmail
     public function budgets()
     {
         return $this->hasMany(Budget::class);
+    }
+
+    public function currentPlan(): ?string
+    {
+        if (! $this->subscribed('default')) {
+            return null;
+        }
+
+        return match (true) {
+            $this->subscribedToPrice(config('services.stripe.price_ai_monthly'), 'default') => 'monthly',
+            $this->subscribedToPrice(config('services.stripe.price_ai_yearly'), 'default') => 'yearly',
+            default => null
+        };
+    }
+
+    public function isOnMonthlyPlan() : bool {
+        return $this -> currentPlan() === 'monthly';
+    }
+
+        public function isOnYearlyPlan() : bool {
+        return $this -> currentPlan() === 'yearly';
     }
 }

@@ -25,18 +25,19 @@
     <header class="bg-purple-950 py-5 ">
         <div class="max-w-6xl mx-auto flex flex-col items-center lg:flex-row lg:justify-between">
             <div class="w-full max-w-100">
-            <a href="">
-                <img src="{{ asset('img/logo.svg') }}" alt="Imagen login de usuarios">
-            </a>
-          </div>
-                <nav class="flex flex-col items-center lg:flex-row gap-4 ">
-                    @auth
-                        <p class="text-white text-xl">Hola: {{ auth()->user()->name }}</p>
-                        <x-dropdown-menu />
-                    @endauth
+                <a href="">
+                    <img src="{{ asset('img/logo.svg') }}" alt="Imagen login de usuarios">
+                </a>
+            </div>
+            <nav class="flex flex-col items-center lg:flex-row gap-4 ">
+                @auth
+                    <x-subscription-badge />
+                    <p class="text-white text-xl">Hola: {{ auth()->user()->name }}</p>
+                    <x-dropdown-menu />
+                @endauth
         </div>
-    </header>    
-    
+    </header>
+
     <div class="mt-5 max-w-5xl mx-auto p-5 lg:p-10">
         <x-inertia::app />
     </div>
